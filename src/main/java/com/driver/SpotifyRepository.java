@@ -38,31 +38,31 @@ public class SpotifyRepository {
     }
 
     public User createUser(String name, String mobile) {
+        for (User user: users){
+            if (user.getMobile().equals(mobile)){
+                return user;
+            }
+        }
+
         User user = new User(name,mobile);
         users.add(user);
         return user;
     }
 
     public Artist createArtist(String name) {
+        for (Artist artist: artists){
+            if (artist.getName().equals(name)){
+                return artist;
+            }
+        }
+
         Artist artist = new Artist(name);
         artists.add(artist);
         return artist;
     }
 
     public Album createAlbum(String title, String artistName) {
-        boolean flag = false;
-        Artist artist1 = new Artist();
-        for (Artist artist : artists) {
-            if (artist.getName().equals(artistName)) {
-                flag = true;
-                artist1 = artist;
-                break;
-            }
-        }
-
-        if (!flag) {
-            artist1 = new Artist(artistName);
-        }
+        Artist artist1 = createArtist(artistName);
 
         Album album = new Album(title);
         albums.add(album);
