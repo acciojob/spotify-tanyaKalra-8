@@ -213,12 +213,88 @@ public class SpotifyRepository {
     }
 
     public Song likeSong(String mobile, String songTitle) throws Exception {
+        User user1 =  null;
+        Song song = null;
+        boolean flag = false;
+        for (User user: users){
+            if (user.getMobile().equals(mobile)){
+                flag = true;
+                user1 = user;
+                break;
+            }
+        }
+        if (flag){
+            boolean flag1 = false;
+            for (Song song1: songs){
+                if (song1.getTitle().equals(songTitle)){
+                    song = song1;
+                    flag1 = true;
+                    break;
+                }
+            }
+            if (flag1){
+                //song and user both exists
+                List<User> list = new ArrayList<>();
+                if (songLikeMap.containsKey(song)){
+                    list =  songLikeMap.get(song);
+                }
 
+                if (!list.contains(user1)){
+                    //only in this case I have to update likes
+                    list.add(user1);
+                    songLikeMap.put(song,list);
+                    song.setLikes(song.getLikes()+1);
+
+//                    finding the album name of given song
+                    Album album = new Album();
+                    for (Album album1: albumSongMap.keySet()){
+                        List<Song> temp = albumSongMap.get(album1);
+                        if (temp.contains(song)){
+                            album = album1;
+                            break;
+                        }
+                    }
+
+                    Artist artist =  new Artist();
+                    for (Artist artist1: artistAlbumMap.keySet()){
+                        List<Album> temp = artistAlbumMap.get(artist1);
+                        if (temp.contains(album)){
+                            artist = artist1;
+                            break;
+                        }
+                    }
+                    artist.setLikes(artist.getLikes()+1);
+                }
+            }
+            else {
+                throw new Exception("Song does not exist");
+            }
+        }
+        else {
+            throw new Exception("User does not exist");
+        }
+        return song;
     }
 
     public String mostPopularArtist() {
+        String artist = null;
+        int mostPopular =  0;
+        for (Artist artist1: artists){
+            if (artist1.getLikes() >= mostPopular){
+                artist = artist1.getName();
+            }
+        }
+        return artist;
     }
 
     public String mostPopularSong() {
+        String song =  null;
+        int mostPop = 0;
+        for (Song song1: songs){
+            if (song1.getLikes() >= mostPop){
+                song = song1.getTitle();
+            }
+        }
+        return song;
     }
 }
