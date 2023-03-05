@@ -51,7 +51,7 @@ public class SpotifyRepository {
 
     public Album createAlbum(String title, String artistName) {
         boolean flag = false;
-        Artist artist1 = null;
+        Artist artist1 = new Artist();
         for (Artist artist : artists) {
             if (artist.getName().equals(artistName)) {
                 flag = true;
@@ -278,9 +278,9 @@ public class SpotifyRepository {
 
     public String mostPopularArtist() {
         String artist = null;
-        int mostPopular =  0;
+        int mostPopular =  Integer.MIN_VALUE;
         for (Artist artist1: artists){
-            if (artist1.getLikes() >= mostPopular){
+            if (artist1.getLikes() > mostPopular){
                 artist = artist1.getName();
             }
         }
@@ -289,9 +289,9 @@ public class SpotifyRepository {
 
     public String mostPopularSong() {
         String song =  null;
-        int mostPop = 0;
+        int mostPop = Integer.MIN_VALUE;
         for (Song song1: songs){
-            if (song1.getLikes() >= mostPop){
+            if (song1.getLikes() > mostPop){
                 song = song1.getTitle();
             }
         }
