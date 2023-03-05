@@ -281,6 +281,7 @@ public class SpotifyRepository {
         int mostPopular =  Integer.MIN_VALUE;
         for (Artist artist1: artists){
             if (artist1.getLikes() > mostPopular){
+                mostPopular =artist1.getLikes();
                 artist = artist1.getName();
             }
         }
@@ -292,6 +293,7 @@ public class SpotifyRepository {
         int mostPop = Integer.MIN_VALUE;
         for (Song song1: songs){
             if (song1.getLikes() > mostPop){
+                mostPop =  song1.getLikes();
                 song = song1.getTitle();
             }
         }
