@@ -97,6 +97,11 @@ public class SpotifyRepository {
     }
 
     public Playlist createPlaylistOnLength(String mobile, String title, int length) throws Exception {
+        for(Playlist playlist : playlists){
+            if(playlist.getTitle().equals(title))
+                return  playlist;
+        }
+
         Playlist playlist = new Playlist(title);
         playlists.add(playlist);
         User user1 =  null;
@@ -134,9 +139,23 @@ public class SpotifyRepository {
     }
 
     public Playlist createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception {
+        for(Playlist playlist : playlists){
+            if(playlist.getTitle().equals(title))
+                return  playlist;
+        }
+
         Playlist playlist = new Playlist(title);
         User user1 =  null;
         playlists.add(playlist);
+
+        List<Song> temp= new ArrayList<>();
+        for(Song song : songs){
+            if(songTitles.contains(song.getTitle())){
+                temp.add(song);
+            }
+        }
+        playlistSongMap.put(playlist,temp);
+
         boolean flag = false;
         for (User user: users){
             if (user.getMobile().equals(mobile)){
@@ -149,9 +168,9 @@ public class SpotifyRepository {
             for (Song song: songs){
                 for (String songName: songTitles) {
                     if (song.getTitle().equals(songName)) {
-                        List<Song> list = playlistSongMap.getOrDefault(playlist, new ArrayList<>());
-                        list.add(song);
-                        playlistSongMap.put(playlist, list);
+//                        List<Song> list = playlistSongMap.getOrDefault(playlist, new ArrayList<>());
+//                        list.add(song);
+//                        playlistSongMap.put(playlist, list);
 
                         List<User> list1 = playlistListenerMap.getOrDefault(playlist, new ArrayList<>());
                         list1.add(user1);
@@ -162,7 +181,8 @@ public class SpotifyRepository {
                         List<Playlist> list2 = userPlaylistMap.getOrDefault(user1, new ArrayList<>());
                         list2.add(playlist);
                         userPlaylistMap.put(user1, list2);
-                        break;
+
+                        return playlist;
                     }
                 }
             }
@@ -195,11 +215,19 @@ public class SpotifyRepository {
             }
             if (flag1){
                 List<User> list =  playlistListenerMap.getOrDefault(playlist,new ArrayList<>());
-                list.add(user1);
+                if (!list.contains(user1)) {
+                    list.add(user1);
+                }
                 playlistListenerMap.put(playlist,list);
 
+                if(creatorPlaylistMap.get(user1)!=playlist) {
+                    creatorPlaylistMap.put(user1, playlist);
+                }
+
                 List<Playlist> list1 =  userPlaylistMap.getOrDefault(user1, new ArrayList<>());
-                list1.add(playlist);
+                if (!list1.contains(playlist)) {
+                    list1.add(playlist);
+                }
                 userPlaylistMap.put(user1,list1);
             }
             else {
